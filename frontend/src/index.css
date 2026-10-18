@@ -62,3 +62,25 @@
   background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
   background-size: 24px 24px;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Premium smooth reveal animations */
+.reveal-init {
+  opacity: 0;
+  transform: scale(0.94) translateY(36px);
+  filter: blur(4px);
+  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 800ms cubic-bezier(0.16, 1, 0.3, 1),
+              filter 800ms ease;
+  will-change: opacity, transform, filter;
+}
+
+.reveal-active {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0px) !important;
+  filter: blur(0px) !important;
+}
+

@@ -28,6 +28,7 @@ import { FITMAKER_CONFIG, type PhysicalMembershipPlan } from '../../data/fitmake
 import { FacilityLightbox } from './FacilityLightbox';
 import { VisitBookingModal } from './VisitBookingModal';
 import { MembershipEnquiryModal } from './MembershipEnquiryModal';
+import { ScrollReveal } from '../shared/ScrollReveal';
 
 const TODAY_ISO = '2026-10-19';
 
@@ -288,7 +289,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Click-to-expand lightbox, View all facilities interaction, Central data-driven
          ========================================================================= */}
       <section id="facilities" className="py-24 border-b border-[#220707] scroll-mt-20 bg-[#0d0303] relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#240808] pb-8">
@@ -482,7 +483,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             </button>
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -492,7 +493,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Configurable demo confirmation / WhatsApp enquiry link
          ========================================================================= */}
       <section id="visit" className="py-24 border-b border-[#220707] scroll-mt-20 bg-gradient-to-b from-[#0d0303] via-[#110404] to-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -757,7 +758,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
 
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -768,7 +769,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Compare plans interaction
          ========================================================================= */}
       <section id="memberships" className="py-24 border-b border-[#220707] scroll-mt-20 bg-[#0d0303] relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -978,7 +979,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             </p>
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -988,7 +989,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Realistic and responsible copy (no false promises)
          ========================================================================= */}
       <section id="programs" className="py-24 border-b border-[#220707] scroll-mt-20 bg-gradient-to-b from-[#0d0303] via-[#0f0404] to-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -1071,7 +1072,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             ))}
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -1080,7 +1081,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Illustrative demo profiles; supports both in-person personal training & online coaching
          ========================================================================= */}
       <section id="trainers" className="py-24 border-b border-[#220707] scroll-mt-20 bg-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -1146,7 +1147,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             ))}
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -1156,7 +1157,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Realistic dashboard / phone mockup preview
          ========================================================================= */}
       <section id="online-coaching" className="py-24 border-b border-[#220707] scroll-mt-20 bg-gradient-to-b from-[#0d0303] via-[#120404] to-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -1325,14 +1326,14 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
 
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
           8. SECTION: TESTIMONIALS (Honest, sample demo member profiles)
          ========================================================================= */}
       <section id="testimonials" className="py-24 border-b border-[#220707] scroll-mt-20 bg-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left space-y-2">
@@ -1408,14 +1409,14 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             </div>
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
           9. SECTION: FAQ ACCORDION
          ========================================================================= */}
       <section id="faqs" className="py-24 border-b border-[#220707] scroll-mt-20 bg-gradient-to-b from-[#0d0303] via-[#0e0303] to-[#0d0303]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <ScrollReveal className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1f0707] border border-[#3b1212] text-[10px] font-heading font-bold uppercase tracking-widest text-[#E50914]">
@@ -1465,7 +1466,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
             })}
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* =========================================================================
@@ -1473,7 +1474,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
           Address, hours, WhatsApp, enquiry form, gym tour CTA, online coaching CTA
          ========================================================================= */}
       <section id="contact" className="py-24 border-b border-[#220707] scroll-mt-20 bg-[#0d0303]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        <ScrollReveal className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <h2 className="text-3xl sm:text-5xl font-heading font-black uppercase tracking-tight text-white">
@@ -1665,7 +1666,7 @@ export const FitMakerHomePage: React.FC<FitMakerHomePageProps> = () => {
 
           </div>
 
-        </div>
+        </ScrollReveal>
       </section>
 
 
