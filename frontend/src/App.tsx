@@ -5,6 +5,8 @@ import { FitMakerNavbar } from './components/layout/FitMakerNavbar';
 import { FitMakerFooter } from './components/layout/FitMakerFooter';
 import { EnquiryModal } from './components/shared/EnquiryModal';
 import { AuthModal } from './components/auth/AuthModal';
+import { VisitBookingModal } from './components/home/VisitBookingModal';
+import { ArrowUp } from 'lucide-react';
 
 // Single Integrated FitMaker Page Flow
 import { FitMakerHomePage } from './components/home/FitMakerHomePage';
@@ -18,8 +20,10 @@ export function App() {
   const [activeSection, setActiveSection] = useState<string>('home');
   const [currentView, setCurrentView] = useState<'main' | 'admin-panel' | 'member-dashboard'>('main');
   const [isEnquiryOpen, setIsEnquiryOpen] = useState<boolean>(false);
-  const [enquiryPlan, setEnquiryPlan] = useState<string>('Pro Plan');
+  const [enquiryPlan, setEnquiryPlan] = useState<string>('Half-Yearly Builder Plan');
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
+  const [isTourModalOpen, setIsTourModalOpen] = useState<boolean>(false);
+  const [showBackToTop, setShowBackToTop] = useState<boolean>(false);
 
   // Authenticated Session State
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
@@ -37,18 +41,38 @@ export function App() {
     initializeEnterpriseStorage();
   }, []);
 
-  // IntersectionObserver to dynamically detect which section is currently in view
+  // Back to top scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // IntersectionObserver to dynamically detect which physical gym section is currently in view
   useEffect(() => {
     if (currentView !== 'main') return;
 
-    const sectionIds = ['home', 'programs', 'coaching', 'membership', 'about', 'contact'];
+    const sectionIds = [
+      'home',
+      'facilities',
+      'visit',
+      'memberships',
+      'programs',
+      'trainers',
+      'online-coaching',
+      'testimonials',
+      'faqs',
+      'contact'
+    ];
+
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
 
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find visible section with highest intersection ratio
         const visibleEntry = entries.find((entry) => entry.isIntersecting);
         if (visibleEntry) {
           setActiveSection(visibleEntry.target.id);
@@ -56,7 +80,7 @@ export function App() {
       },
       {
         root: null,
-        rootMargin: '-20% 0px -60% 0px', // detects when section is near top/center
+        rootMargin: '-20% 0px -60% 0px',
         threshold: 0,
       }
     );
@@ -90,6 +114,14 @@ export function App() {
   const handleOpenEnquiry = (planName?: string) => {
     if (planName) setEnquiryPlan(planName);
     setIsEnquiryOpen(true);
+  };
+
+  const handleOpenTour = () => {
+    setIsTourModalOpen(true);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLoginSuccess = (role: UserRole) => {
@@ -157,7 +189,7 @@ export function App() {
           onLogout={handleLogout}
           onExplorePublicPlans={() => {
             setCurrentView('main');
-            handleNavigateSection('membership');
+            handleNavigateSection('memberships');
           }}
         />
       </div>
@@ -171,6 +203,7 @@ export function App() {
         activeSection={activeSection}
         onNavigateSection={handleNavigateSection}
         onOpenEnquiry={handleOpenEnquiry}
+        onOpenTour={handleOpenTour}
         onOpenAuth={() => {
           if (currentUser) {
             if (currentUser.role === 'ADMIN' || currentUser.role === 'STAFF') {
@@ -184,10 +217,10 @@ export function App() {
         }}
       />
 
-      {/* Single Unified Page with Sections: Home, Programs, Coaching, Membership, About, Contact */}
+      {/* Single Unified Page with Sections: Hero, Facilities, Visit, Memberships, Programs, Trainers, Online Coaching, Testimonials, FAQ, Contact */}
       <main className="flex-1">
         <FitMakerHomePage
-          onStartJourney={() => handleOpenEnquiry('Transformation Kickstart')}
+          onStartJourney={() => handleOpenTour()}
           onExplorePrograms={() => handleNavigateSection('programs')}
           onSelectPlan={(plan) => handleOpenEnquiry(plan)}
           onBookCoach={(coachName) => handleOpenEnquiry(`Coaching with ${coachName}`)}
@@ -198,14 +231,34 @@ export function App() {
       {/* FitMaker Footer */}
       <FitMakerFooter
         onNavigate={handleNavigateSection}
-        onOpenEnquiry={() => handleOpenEnquiry('Consultation')}
+        onOpenEnquiry={() => handleOpenEnquiry('General Consultation')}
+        onOpenTour={handleOpenTour}
       />
 
-      {/* Interactive Enquiry Modal */}
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-40 p-3 rounded-full bg-[#E50914] text-white shadow-[0_0_20px_rgba(229,9,20,0.6)] hover:bg-[#c90812] transition-all cursor-pointer transform hover:-translate-y-1"
+          aria-label="Back to top"
+          title="Back to top"
+        >
+          <ArrowUp className="w-5 h-5 stroke-[2.5]" />
+        </button>
+      )}
+
+      {/* Interactive Membership Enquiry Modal */}
       <EnquiryModal
         isOpen={isEnquiryOpen}
         onClose={() => setIsEnquiryOpen(false)}
         defaultPlan={enquiryPlan}
+      />
+
+      {/* Direct Gym Tour Booking Modal */}
+      <VisitBookingModal
+        isOpen={isTourModalOpen}
+        onClose={() => setIsTourModalOpen(false)}
+        preferredFacility="Complete Facility Walkthrough"
       />
 
       {/* Enterprise Auth Modal */}

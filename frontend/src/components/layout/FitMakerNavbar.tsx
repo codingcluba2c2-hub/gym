@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface FitMakerNavbarProps {
   activeSection: string;
   onNavigateSection: (sectionId: string) => void;
   onOpenAuth: () => void;
   onOpenEnquiry: (plan?: string) => void;
+  onOpenTour?: () => void;
 }
 
 export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
@@ -13,18 +14,19 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
   onNavigateSection,
   onOpenAuth,
   onOpenEnquiry,
+  onOpenTour,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navLinks = [
     { id: 'home', label: 'Home' },
+    { id: 'facilities', label: 'Facilities' },
+    { id: 'visit', label: 'Visit Us' },
+    { id: 'memberships', label: 'Memberships' },
     { id: 'programs', label: 'Programs' },
-    { id: 'coaching', label: 'Coaching' },
-    { id: 'membership', label: 'Membership' },
-    { id: 'about', label: 'About Us' },
+    { id: 'trainers', label: 'Trainers' },
+    { id: 'online-coaching', label: 'Online Coaching' },
     { id: 'contact', label: 'Contact' },
   ];
 
@@ -41,13 +43,6 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
     setMobileMenuOpen(false);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      onNavigateSection('programs');
-    }
-  };
-
   return (
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
       isScrolled 
@@ -60,7 +55,7 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
           {/* FitMaker Red Box Logo */}
           <button
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 text-left cursor-pointer group"
+            className="flex items-center gap-3 text-left cursor-pointer group shrink-0"
           >
             <div className="w-10 h-10 rounded-lg bg-[#E50914] flex items-center justify-center text-white font-heading font-black text-xl tracking-tighter shadow-[0_0_20px_rgba(229,9,20,0.6)] group-hover:scale-105 transition-transform">
               FM
@@ -69,59 +64,28 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
               <span className="font-heading text-xl font-black text-white tracking-wider block group-hover:text-[#E50914] transition-colors leading-none uppercase">
                 Fit<span className="text-[#E50914]">Maker</span>
               </span>
-              <span className="text-[9px] tracking-[0.25em] uppercase text-zinc-400 block mt-0.5 font-semibold">
-                Transform Your Body
+              <span className="text-[9px] tracking-[0.2em] uppercase text-zinc-400 block mt-0.5 font-semibold">
+                Fitness Centre &bull; Online
               </span>
             </div>
           </button>
 
           {/* Search Icon & Navigation Links */}
-          <div className="hidden lg:flex items-center gap-8">
-            {/* Search Button / Input */}
-            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-              {searchOpen ? (
-                <div className="flex items-center bg-[#1d0b0b] border border-[#E50914]/60 rounded-full px-3 py-1.5 transition-all shadow-[0_0_12px_rgba(229,9,20,0.25)]">
-                  <Search className="w-4 h-4 text-zinc-400 mr-2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search program..."
-                    autoFocus
-                    className="bg-transparent text-xs text-white placeholder-zinc-500 focus:outline-none w-32"
-                    onBlur={() => !searchQuery && setSearchOpen(false)}
-                  />
-                  <button type="button" onClick={() => setSearchOpen(false)} className="text-zinc-500 hover:text-white">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(true)}
-                  className="p-2 rounded-full text-zinc-400 hover:text-white hover:bg-[#200b0b] transition-colors cursor-pointer"
-                  title="Search"
-                >
-                  <Search className="w-4 h-4" />
-                </button>
-              )}
-            </form>
-
-            {/* Navigation links with Elegant Underline Animation */}
-            <nav className="flex items-center gap-7">
+          <div className="hidden xl:flex items-center gap-6">
+            <nav className="flex items-center gap-5">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.id;
                 return (
                   <button
                     key={link.id}
                     onClick={() => handleNavClick(link.id)}
-                    className={`relative py-2 text-sm font-semibold tracking-wide transition-all cursor-pointer group ${
+                    className={`relative py-2 text-xs font-semibold tracking-wide transition-all cursor-pointer group ${
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                     }`}
                   >
                     <span>{link.label}</span>
                     
-                    {/* Enterprise Animated Underline Form */}
+                    {/* Animated Underline */}
                     <span 
                       className={`absolute bottom-0 left-0 h-[2.5px] rounded-full transition-all duration-300 ${
                         isActive 
@@ -135,28 +99,55 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
             </nav>
           </div>
 
-          {/* Auth Actions (Login & Red Pill Sign Up) */}
-          <div className="hidden sm:flex items-center gap-4">
+          {/* Action CTAs: Book Tour / Join / Login */}
+          <div className="hidden sm:flex items-center gap-3">
+            <button
+              onClick={() => {
+                if (onOpenTour) {
+                  onOpenTour();
+                } else {
+                  handleNavClick('visit');
+                }
+              }}
+              className="px-4 py-2 rounded-full bg-[#1e0707] hover:bg-[#2d0c0c] text-zinc-200 hover:text-white text-xs font-heading font-bold uppercase tracking-wider border border-[#3b1212] transition-colors cursor-pointer"
+            >
+              Book Gym Tour
+            </button>
+
+            <button
+              onClick={() => onOpenEnquiry('Membership Enquiry')}
+              className="px-4 py-2 rounded-full bg-[#E50914] hover:bg-[#c90812] text-white text-xs font-heading font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all cursor-pointer"
+            >
+              Join Club
+            </button>
+
             <button
               onClick={onOpenAuth}
-              className="px-3.5 py-1.5 rounded-full bg-[#E50914] text-white text-[11px] font-bold uppercase cursor-pointer"
+              className="px-3 py-1.5 rounded-full text-zinc-400 hover:text-white text-xs font-heading font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+              title="Portal Login"
             >
               Login
             </button>
           </div>
 
           {/* Mobile hamburger */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="xl:hidden flex items-center gap-2">
             <button
-              onClick={() => onOpenEnquiry('Quick Sign Up')}
-              className="px-3.5 py-1.5 rounded-full bg-[#E50914] text-white text-[11px] font-bold uppercase"
+              onClick={() => {
+                if (onOpenTour) {
+                  onOpenTour();
+                } else {
+                  handleNavClick('visit');
+                }
+              }}
+              className="px-3 py-1.5 rounded-full bg-[#E50914] text-white text-[10px] font-bold uppercase tracking-wider"
             >
-              Sign Up
+              Book Tour
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg bg-[#1f0a0a] border border-[#3b1212] text-white hover:text-[#E50914]"
-              aria-label="Toggle menu"
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -167,7 +158,7 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#160606] border-b border-[#3b1212] px-4 pt-3 pb-6 space-y-2">
+        <div className="xl:hidden bg-[#160606] border-b border-[#3b1212] px-4 pt-3 pb-6 space-y-2">
           <div className="flex flex-col space-y-1">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
@@ -175,7 +166,7 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
                 <button
                   key={link.id}
                   onClick={() => handleNavClick(link.id)}
-                  className={`text-left px-3.5 py-2.5 text-sm font-semibold tracking-wider uppercase rounded-lg transition-colors flex items-center justify-between ${
+                  className={`text-left px-3.5 py-2.5 text-xs font-semibold tracking-wider uppercase rounded-lg transition-colors flex items-center justify-between ${
                     isActive
                       ? 'bg-[#E50914]/20 text-[#E50914] font-bold'
                       : 'text-zinc-300 hover:bg-[#200808] hover:text-white'
@@ -186,24 +177,29 @@ export const FitMakerNavbar: React.FC<FitMakerNavbarProps> = ({
                 </button>
               );
             })}
+            
             <div className="pt-3 border-t border-[#300c0c] flex gap-3">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onOpenAuth();
+                  if (onOpenTour) {
+                    onOpenTour();
+                  } else {
+                    handleNavClick('visit');
+                  }
                 }}
-                className="w-1/2 py-2 text-center text-xs font-bold uppercase rounded-lg bg-[#200b0b] text-white border border-[#401212]"
+                className="w-1/2 py-2.5 text-center text-xs font-bold uppercase rounded-lg bg-[#200b0b] text-white border border-[#401212]"
               >
-                Login
+                Book Tour
               </button>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenEnquiry('Mobile Membership');
                 }}
-                className="w-1/2 py-2 text-center text-xs font-bold uppercase rounded-full bg-[#E50914] text-white"
+                className="w-1/2 py-2.5 text-center text-xs font-bold uppercase rounded-full bg-[#E50914] text-white"
               >
-                Sign Up
+                Join Now
               </button>
             </div>
           </div>
