@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #090909;
+    --bg-surface: #151515;
+    --bg-surface-elevated: #1f1f1f;
+    --primary: #FF5A1F;
+    --primary-hover: #ff723f;
+    --primary-glow: rgba(255, 90, 31, 0.25);
+    --text-white: #FFFFFF;
+    --text-muted: #9CA3AF;
+    --text-dim: #6B7280;
+    --border-subtle: #262626;
+    --border-highlight: #383838;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-muted);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-white);
+    font-family: 'Oswald', 'Impact', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090909;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF5A1F;
+}
+
+/* Subtle glow utility */
+.glow-primary-sm {
+  box-shadow: 0 0 15px -3px rgba(255, 90, 31, 0.3);
+}
+
+.glow-primary-md {
+  box-shadow: 0 0 25px -4px rgba(255, 90, 31, 0.45);
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(circle at top center, rgba(255, 90, 31, 0.12) 0%, rgba(9, 9, 9, 0) 70%);
+}
+
+.noise-bg {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}

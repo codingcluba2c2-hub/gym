@@ -1,0 +1,236 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  MEMBER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum MembershipStatus {
+  ACTIVE
+  PENDING_PAYMENT
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+}
+
+enum PaymentStatus {
+  SUCCESS
+  FAILED
+  PENDING
+  REFUNDED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  ATTENDED
+  CANCELLED
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_REVIEW
+  CONTACTED
+  RESOLVED
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  passwordHash  String
+  role          UserRole      @default(MEMBER)
+  status        UserStatus    @default(ACTIVE)
+  profile       MemberProfile?
+  auditLogs     AuditLog[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([email])
+}
+
+model MemberProfile {
+  id                String            @id @default(uuid())
+  userId            String            @unique
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName          String
+  phone             String
+  address           String?
+  emergencyContact  String?
+  experienceLevel   String            @default("Intermediate")
+  avatar            String?
+  inbodyScanDate    DateTime?
+  memberships       Membership[]
+  payments          Payment[]
+  attendances       Attendance[]
+  bookings          ClassBooking[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([phone])
+}
+
+model MembershipPlan {
+  id              String        @id @default(uuid())
+  name            String
+  price           Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD")
+  durationMonths  Int           @default(1)
+  highlighted     Boolean       @default(false)
+  badge           String?
+  description     String
+  features        String[]
+  notIncluded     String[]
+  isAvailable     Boolean       @default(true)
+  memberships     Membership[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([isAvailable])
+}
+
+model Membership {
+  id                     String           @id @default(uuid())
+  memberId               String
+  member                 MemberProfile    @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  planId                 String
+  plan                   MembershipPlan   @relation(fields: [planId], references: [id], onDelete: Restrict)
+  
+  // Historical snapshots preventing plan updates from altering past legal purchases
+  planNameSnapshot       String
+  priceSnapshot          Decimal          @db.Decimal(10, 2)
+  currencySnapshot       String           @default("USD")
+  durationMonthsSnapshot Int              @default(1)
+
+  startDate              DateTime
+  expiryDate             DateTime
+  status                 MembershipStatus @default(PENDING_PAYMENT)
+  notes                  String?
+  payments               Payment[]
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  @@index([memberId])
+  @@index([status])
+  @@index([expiryDate])
+}
+
+model Payment {
+  id                 String         @id @default(uuid())
+  membershipId       String?
+  membership         Membership?    @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+  memberId           String
+  member             MemberProfile  @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  amount             Decimal        @db.Decimal(10, 2)
+  currency           String         @default("USD")
+  provider           String         @default("RAZORPAY")
+  providerOrderId    String         @unique
+  providerPaymentId  String?        @unique
+  status             PaymentStatus  @default(PENDING)
+  description        String
+  receiptNumber      String         @unique
+  paidAt             DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([memberId])
+  @@index([providerOrderId])
+}
+
+model Attendance {
+  id              String         @id @default(uuid())
+  memberId        String
+  member          MemberProfile  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  checkInTime     DateTime       @default(now())
+  checkInDate     String         // Format: YYYY-MM-DD for fast duplicate prevention
+  zone            String         @default("Main Deck")
+  recordedByRole  String         @default("SELF")
+
+  @@unique([memberId, checkInDate])
+  @@index([checkInDate])
+}
+
+model Trainer {
+  id              String         @id @default(uuid())
+  name            String
+  role            String
+  experience      String
+  specialty       String
+  bio             String
+  image           String
+  certifications  String[]
+  classes         FitnessClass[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model FitnessClass {
+  id              String         @id @default(uuid())
+  name            String
+  category        String
+  trainerId       String
+  trainer         Trainer        @relation(fields: [trainerId], references: [id], onDelete: Restrict)
+  scheduledDay    String
+  scheduledTime   String
+  duration        String
+  room            String
+  capacity        Int            @default(20)
+  intensity       String         @default("High")
+  bookings        ClassBooking[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model ClassBooking {
+  id              String         @id @default(uuid())
+  classId         String
+  fitnessClass    FitnessClass   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  memberId        String
+  member          MemberProfile  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  status          BookingStatus  @default(CONFIRMED)
+  bookedAt        DateTime       @default(now())
+
+  @@unique([classId, memberId])
+}
+
+model Enquiry {
+  id              String         @id @default(uuid())
+  name            String
+  email           String
+  phone           String
+  topic           String
+  message         String
+  status          EnquiryStatus  @default(NEW)
+  adminNotes      String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([status])
+}
+
+model AuditLog {
+  id                String       @id @default(uuid())
+  action            String
+  performedByUserId String
+  user              User         @relation(fields: [performedByUserId], references: [id], onDelete: Cascade)
+  performedByEmail  String
+  targetEntity      String
+  targetId          String
+  details           String
+  timestamp         DateTime     @default(now())
+
+  @@index([performedByUserId])
+  @@index([timestamp])
+}
